@@ -1,0 +1,109 @@
+/* * {
+  box-sizing: border-box;
+} */
+
+body {
+  background-color: rgb(212, 234, 250);
+  text-align: center;
+}
+
+#simulator {
+  width: 40vw;
+  height: 40vw;
+  margin: 1vw auto;
+  background-color: black;
+  border: solid 10px rgb(0, 150, 255);
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px 3px black;
+}
+
+.pixel {
+  background: #fff;
+  width: 1vw;
+  height: 1vw;
+  border-radius: 10px;
+  float: left;
+}
+
+.occupied {
+  background-color: #f80505;
+  box-shadow: 0 0 10px #fa8080;
+}
+
+.seed {
+  background: #07d50b;
+}
+
+.filled {
+  background-color: #049a2c;
+  box-shadow: 0 0 5px #07d50b;
+}
+
+#scoreContainer {
+  width:  40vw;
+  display: flex;
+  margin: auto;
+  justify-content: space-around;
+}
+
+.scoreBoard {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  border-radius: 10px;
+  border: solid 5px rgb(1, 121, 241);
+  color: white;
+  background-color: black;
+  display: inline-block;
+  padding: 5px;
+  width: 40%;
+  box-shadow: 0px 0px 20px 3px black;
+}
+
+#onScreenControllers {
+  display: none;
+}
+
+@media only screen and (max-width: 786px) {
+  #gameContainer {
+    width: 80vw;
+    height: 80vw;
+  }
+
+  .gameBoardPixel {
+    width: 2vw;
+    height: 2vw;
+  }
+
+  #scoreContainer {
+    width: 80vw;
+  }
+
+  #onScreenControllers {
+  width: 80vw;
+  margin: 5vw auto;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  }
+
+  #onScreenControllers > div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #onScreenControllers button {
+    background-color: transparent;
+    height: 20vw;
+    width: 20vw;
+    font-size: 10vw;
+    border: none;
+  }
+
+  #onScreenControllers button:focus {
+    outline: none;
+  }
+
+  #onScreenControllers button:active {
+    background-color: slategray;
+  }
+}
