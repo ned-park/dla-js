@@ -25,7 +25,7 @@ function hasNeighbours(x, y) {
     for (let j = -1; j <= 1; j++) {
       let n_x = getEquivalenceClassModN(x+i, ROW)
       let n_y = getEquivalenceClassModN(y+j, COL)
-      if (n_y != y || n_x != x) 
+      if (n_y == y && n_x == x) 
         continue
       else if (document.querySelector(`#pixel-${n_x}-${n_y}`).classList.contains('occupied')) {
         console.log(true)
@@ -45,6 +45,25 @@ function enterParticle(pixel=getRandomPixel()) {
 
 function moveParticles(particlesArray) {
   let updatedParticlesArray = []
+
+  let positioned = particlesArray.filter(particle => {
+    let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
+    return hasNeighbours(x, y)
+  })
+
+  console.log(positioned.length)
+  positioned.forEach( particle => {
+    particle.classList.remove('loose')
+    particle.classList.add('occupied')
+  })
+
+  particlesArray = particlesArray.filter(particle => {
+    let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
+    return !hasNeighbours(x, y)
+  })
+
+  // console.log(particlesArray.length)
+
   for (let i = 0; i < particlesArray.length; i++) {
     let [, x, y] = particlesArray[i].getAttribute('id').split('-').map(n => Number(n))
     let direction = Math.floor(Math.random()*4)
@@ -68,8 +87,12 @@ function moveParticles(particlesArray) {
     
     particlesArray[i].classList.remove('loose')
     let newSpot = document.querySelector(`#pixel-${x}-${y}`)
-    hasNeighbours(x, y) ? newSpot.classList.add('occupied') : newSpot.classList.add('loose')
-    updatedParticlesArray.push(newSpot)
+    // if (hasNeighbours(x, y)) {
+      // newSpot.classList.add('occupied') 
+    // } else {
+      newSpot.classList.add('loose')
+      updatedParticlesArray.push(newSpot) // can't push unless we're also removing otherstuff, needs to be a separate array
+    // }
   }
 
   return updatedParticlesArray
@@ -87,9 +110,11 @@ function runSimulation() {
     looseParticles.push(particle)
   }
  
+
   setInterval(() => {
     looseParticles = moveParticles(looseParticles)  
-  }, 300);
+    console.log(looseParticles.length)
+  }, 200);
   
 
 }
