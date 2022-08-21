@@ -3,7 +3,10 @@ const sim = document.querySelector('#simulator')
 const ROW = Number(sim.getAttribute('data-row'))
 const COL = Number(sim.getAttribute('data-col'))
 
-const PARTICLES = 300 // change to ensure much less than pixels.length
+
+let intervalFrequency = 20 //ms
+
+const PARTICLES = 800 // change to ensure much less than pixels.length
 
 function createSeed(x=0, y=0) {
   const seed = document.querySelector(`#pixel-${x}-${y}`)
@@ -28,7 +31,6 @@ function hasNeighbours(x, y) {
       if (n_y == y && n_x == x) 
         continue
       else if (document.querySelector(`#pixel-${n_x}-${n_y}`).classList.contains('occupied')) {
-        console.log(true)
         return true
       }
     }
@@ -51,7 +53,6 @@ function moveParticles(particlesArray) {
     return hasNeighbours(x, y)
   })
 
-  console.log(positioned.length)
   positioned.forEach( particle => {
     particle.classList.remove('loose')
     particle.classList.add('occupied')
@@ -61,8 +62,6 @@ function moveParticles(particlesArray) {
     let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
     return !hasNeighbours(x, y)
   })
-
-  // console.log(particlesArray.length)
 
   for (let i = 0; i < particlesArray.length; i++) {
     let [, x, y] = particlesArray[i].getAttribute('id').split('-').map(n => Number(n))
@@ -114,7 +113,7 @@ function runSimulation() {
   setInterval(() => {
     looseParticles = moveParticles(looseParticles)  
     console.log(looseParticles.length)
-  }, 200);
+  }, intervalFrequency);
   
 
 }
