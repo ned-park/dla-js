@@ -17,25 +17,21 @@ function getRandomPixel() {
 }
 
 function getEquivalenceClassModN(m, n) {
-  console.log(typeof m)
-  let result = (m + n) 
-  if (result < 0) {
-    throw new Error(`result: ${result} for m: ${m}, n: ${n} is negative`)
-  }
-  return result % n
+  return (m + n) %n
 }
 
 function hasNeighbours(x, y) {
-  // console.log(x,y)
-  for (let i = -1; i <=1; i++) {
-    let n_x = getEquivalenceClassModN(x+i, ROW)
-    let n_y = getEquivalenceClassModN(y+i, COL)
-    // console.log(x, y, n_x, n_y)
-    if (n_y != y || n_x != x) 
-      continue
-    // else if (document.querySelector(`#pixel-${n_x}-${n_y}`).classList.includes('occupied')) {
-      // return true
-    // }
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+      let n_x = getEquivalenceClassModN(x+i, ROW)
+      let n_y = getEquivalenceClassModN(y+j, COL)
+      if (n_y != y || n_x != x) 
+        continue
+      else if (document.querySelector(`#pixel-${n_x}-${n_y}`).classList.contains('occupied')) {
+        console.log('neighbour found')
+        return true
+      }
+    }
   }
   return false
 }
@@ -50,37 +46,29 @@ function enterParticle(pixel=getRandomPixel()) {
 function moveParticles(particlesArray) {
   return particlesArray.map(particle => {
     let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
-    console.log(x, y)
     let direction = Math.floor(Math.random()*4)
-    console.log(direction, ROW, COL)
     switch (direction) { // topologically closed simulation
       case 0: // up
-        console.log(y, y-1, getEquivalenceClassModN(y-1, COL))
         y = getEquivalenceClassModN(y-1, COL)
         break;
       case 1: // right
-        console.log(x, x+1, getEquivalenceClassModN(x+1, ROW))
         x = getEquivalenceClassModN(x+1, ROW)
         break;
       case 2: // down
-        console.log(y, y+1, getEquivalenceClassModN(y+1, COL))
         y = getEquivalenceClassModN(y+1, COL)
         break;
       case 3: // left
-      console.log(x, x-1, getEquivalenceClassModN(x-1, ROW))
         x = getEquivalenceClassModN(x-1, ROW)
         break;
       default: // do nothing
         console.log('default case somehow reached')
         break;
     }
-    console.log(x,y)
     
-    // console.log(x,y)
     particle.classList.remove('loose')
     let newSpot = document.querySelector(`#pixel-${x}-${y}`)
     hasNeighbours(x, y) ? newSpot.classList.add('occupied') : newSpot.classList.add('loose')
-    
+    console.log(newSpot)
     return newSpot
   })
 }
@@ -98,12 +86,13 @@ function runSimulation() {
     looseParticles.push(particle)
   }
 
+
   while (looseParticles.length > 0) {
     looseParticles = moveParticles(looseParticles)
-    // looseParticles = looseParticles.filter(particle => {
-      
-    // })
-    looseParticles.pop()
+    looseParticles = looseParticles.filter(particle => {
+      return particle.classList.contains('loose')
+    })
+    looseParticles.forEach(particle => particle.classList.add('loose'))
   }
     
 
