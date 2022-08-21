@@ -15,8 +15,8 @@ body {
 
 .pixel {
   background: #bbb;
-  width: 0.25vw;
-  height: 0.25vw;
+  width: 0.4vw;
+  height: 0.4vw;
   border-radius: 50%;
   float: left;
 }
