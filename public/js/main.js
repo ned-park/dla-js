@@ -7,7 +7,7 @@ const PARTICLES = 300 // change to ensure much less than pixels.length
 
 function createSeed(x=0, y=0) {
   const seed = document.querySelector(`#pixel-${x}-${y}`)
-  seed.classList.remove('occupied', 'empty')
+  seed.classList.remove('loose')
   seed.classList.add('occupied')
   return seed;
 }
@@ -28,7 +28,7 @@ function hasNeighbours(x, y) {
       if (n_y != y || n_x != x) 
         continue
       else if (document.querySelector(`#pixel-${n_x}-${n_y}`).classList.contains('occupied')) {
-        console.log('neighbour found')
+        console.log(true)
         return true
       }
     }
@@ -37,15 +37,16 @@ function hasNeighbours(x, y) {
 }
 
 function enterParticle(pixel=getRandomPixel()) {
-  while (!pixel.classList.contains('empty')) {
+  while (pixel.classList.contains('occupied') || pixel.classList.contains('loose')) {
     pixel = getRandomPixel()
   }
   return pixel
 }
 
 function moveParticles(particlesArray) {
-  return particlesArray.map(particle => {
-    let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
+  let updatedParticlesArray = []
+  for (let i = 0; i < particlesArray.length; i++) {
+    let [, x, y] = particlesArray[i].getAttribute('id').split('-').map(n => Number(n))
     let direction = Math.floor(Math.random()*4)
     switch (direction) { // topologically closed simulation
       case 0: // up
@@ -61,16 +62,17 @@ function moveParticles(particlesArray) {
         x = getEquivalenceClassModN(x-1, ROW)
         break;
       default: // do nothing
-        console.log('default case somehow reached')
+        throw new Error(`Invalid direction: ${direction}`)
         break;
     }
     
-    particle.classList.remove('loose')
+    particlesArray[i].classList.remove('loose')
     let newSpot = document.querySelector(`#pixel-${x}-${y}`)
     hasNeighbours(x, y) ? newSpot.classList.add('occupied') : newSpot.classList.add('loose')
-    console.log(newSpot)
-    return newSpot
-  })
+    updatedParticlesArray.push(newSpot)
+  }
+
+  return updatedParticlesArray
 }
 
 
@@ -81,24 +83,20 @@ function runSimulation() {
   
   for (let i = 0; i < PARTICLES; i++) {
     let particle = enterParticle()
-    // particle.classList.remove('empty')
     particle.classList.add('loose')
     looseParticles.push(particle)
   }
-
-
-  while (looseParticles.length > 0) {
-    looseParticles = moveParticles(looseParticles)
-    looseParticles = looseParticles.filter(particle => {
-      return particle.classList.contains('loose')
-    })
-    looseParticles.forEach(particle => particle.classList.add('loose'))
-  }
-    
+ 
+  setInterval(() => {
+    looseParticles = moveParticles(looseParticles)  
+  }, 300);
+  
 
 }
 
 runSimulation()
+
+
 
 // //Set animation speed
 // let updateInterval = setInterval(enterParticle, 100)
