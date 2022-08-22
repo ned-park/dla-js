@@ -2,7 +2,8 @@ let pixels = Array.from(document.querySelectorAll('.pixel'))
 const sim = document.querySelector('#simulator')
 const ROW = Number(sim.getAttribute('data-row'))
 const COL = Number(sim.getAttribute('data-col'))
-
+// const DEPTH = Number(sim.getAttribute('data-depth')) || 1 // assume 2D once more
+const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 4 // assume 2D, change to *3 -1 if 8/26 directions are desired
 
 let intervalFrequency = 20 //ms
 
@@ -12,11 +13,16 @@ function createSeed(x=0, y=0) {
   const seed = document.querySelector(`#pixel-${x}-${y}`)
   seed.classList.remove('loose')
   seed.classList.add('occupied')
+  seed.style.background = "black"
   return seed;
 }
 
+function getRandomInt(n) {
+  return Math.floor(Math.random()*n)
+}
+
 function getRandomPixel() {
-  return pixels[Math.floor(Math.random()*pixels.length)]
+  return pixels[getRandomInt(pixels.length)]
 }
 
 function getEquivalenceClassModN(m, n) {
@@ -65,7 +71,7 @@ function moveParticles(particlesArray) {
 
   for (let i = 0; i < particlesArray.length; i++) {
     let [, x, y] = particlesArray[i].getAttribute('id').split('-').map(n => Number(n))
-    let direction = Math.floor(Math.random()*4)
+    let direction = getRandomInt(NUMBER_OF_DIRECTIONS)
     switch (direction) { // topologically closed simulation
       case 0: // up
         y = getEquivalenceClassModN(y-1, COL)
@@ -120,9 +126,3 @@ function runSimulation() {
 
 runSimulation()
 
-
-
-// //Set animation speed
-// let updateInterval = setInterval(enterParticle, 100)
-
-// addEventListener("keydown", e => changeDirection(e.keyCode))
