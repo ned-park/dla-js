@@ -32,11 +32,11 @@ function getEquivalenceClassModN(m, n) {
 function hasNeighbours(x, y) {
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
-      let n_x = getEquivalenceClassModN(x+i, ROW)
-      let n_y = getEquivalenceClassModN(y+j, COL)
-      if (n_y == y && n_x == x) 
+      let nx = getEquivalenceClassModN(x+i, ROW)
+      let ny = getEquivalenceClassModN(y+j, COL)
+      if (ny == y && nx == x) 
         continue
-      else if (document.querySelector(`#pixel-${n_x}-${n_y}`).classList.contains('occupied')) {
+      else if (document.querySelector(`#pixel-${nx}-${ny}`).classList.contains('occupied')) {
         return true
       }
     }
