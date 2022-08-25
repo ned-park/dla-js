@@ -2,12 +2,14 @@ let pixels = Array.from(document.querySelectorAll('.pixel'))
 const sim = document.querySelector('#simulator')
 const ROW = Number(sim.getAttribute('data-row'))
 const COL = Number(sim.getAttribute('data-col'))
+const OPEN_TOPOLOGY = sim.getAttribute('data-open-topology') == "true"
+console.log(OPEN_TOPOLOGY)
 // const DEPTH = Number(sim.getAttribute('data-depth')) || 1 // assume 2D once more
 const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 4 // assume 2D, change to *3 -1 if 8/26 directions are desired
 
 let intervalFrequency = 20 //ms
 
-const PARTICLES = 800 // change to ensure much less than pixels.length
+const PARTICLES = Math.floor(ROW*COL*0.1) // 10% of space is filled with particles
 
 function createSeed(x=0, y=0) {
   const seed = document.querySelector(`#pixel-${x}-${y}`)
@@ -26,17 +28,27 @@ function getRandomPixel() {
 }
 
 function getEquivalenceClassModN(m, n) {
-  return (m + n) %n
+  return OPEN_TOPOLOGY
+    ? m
+    : (m + n) % n
+}
+
+function outOfBounds(x, y) {
+  return (x < 0 || y < 0 || x >= ROW || y >= COL)
 }
 
 function hasNeighbours(x, y) {
+  if (OPEN_TOPOLOGY && outOfBounds(x, y)) {
+    return false
+  }
+
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
       let nx = getEquivalenceClassModN(x+i, ROW)
       let ny = getEquivalenceClassModN(y+j, COL)
-      if (ny == y && nx == x) 
+      if (ny == y && nx == x) {
         continue
-      else if (document.querySelector(`#pixel-${nx}-${ny}`).classList.contains('occupied')) {
+      } else if (document.querySelector(`#pixel-${nx}-${ny}`).classList.contains('occupied')) {
         return true
       }
     }
@@ -66,7 +78,7 @@ function moveParticles(particlesArray) {
 
   particlesArray = particlesArray.filter(particle => {
     let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
-    return !hasNeighbours(x, y)
+    return !hasNeighbours(x, y) && !outOfBounds(x, y)
   })
 
   for (let i = 0; i < particlesArray.length; i++) {
@@ -90,6 +102,13 @@ function moveParticles(particlesArray) {
         break;
     }
     
+    if (OPEN_TOPOLOGY) {
+      particlesArray = particlesArray.filter(particle => {
+        let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
+        return !outOfBounds(x, y)
+      })
+    }
+
     particlesArray[i].classList.remove('loose')
     let newSpot = document.querySelector(`#pixel-${x}-${y}`)
     // if (hasNeighbours(x, y)) {

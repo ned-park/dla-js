@@ -14,10 +14,10 @@ body {
 }
 
 .pixel {
-  background: #bbb;
+  background: #ddd;
   width: 0.4vw;
   height: 0.4vw;
-  border-radius: 50%;
+  /* border-radius: 50%; */
   float: left;
 }
 
