@@ -9,11 +9,11 @@ let pixels = Array.from(document.querySelectorAll('.pixel')).filter(pixel => {
 
 const OPEN_TOPOLOGY = sim.getAttribute('data-open-topology') == "true"
 // const DEPTH = Number(sim.getAttribute('data-depth')) || 1 // assume 2D once more
-const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 4 // assume 2D, change to *3 -1 if 8/26 directions are desired
+const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 8 // assume 2D, change to *3 -1 if 8/26 directions are desired
 
 let intervalFrequency = 20 //ms
 
-const PARTICLES = 1000 || Math.floor(ROW*COL*0.1) // 10% of space available space is filled with particles
+const PARTICLES = Math.floor(ROW*COL*0.05) // 10% of space available space is filled with particles
 
 function createSeed(x=0, y=0) {
   const seed = document.querySelector(`#pixel_${x}_${y}`)
@@ -102,6 +102,22 @@ function moveParticles(particlesArray) {
       case 3: // left
         x = getEquivalenceClassModN(x-1, ROW)
         break;
+      case 4: // down right
+        x = getEquivalenceClassModN(x+1, ROW)
+        y = getEquivalenceClassModN(y+1, COL)
+        break;
+      case 5: // up right
+        x = getEquivalenceClassModN(x+1, ROW)
+        y = getEquivalenceClassModN(y-1, COL)
+        break;
+      case 6: // up left
+        x = getEquivalenceClassModN(x-1, ROW)
+        y = getEquivalenceClassModN(y-1, COL)
+        break;
+      case 7: // down left
+        x = getEquivalenceClassModN(x-1, ROW)
+        y = getEquivalenceClassModN(y+1, COL)
+        break;  
       default: // do nothing
         throw new Error(`Invalid direction: ${direction}`)
         break;
@@ -128,7 +144,7 @@ function moveParticles(particlesArray) {
 }
 
 function runSimulation() {
-  createSeed(10,10)
+  createSeed(Math.floor(ROW/2), Math.floor(COL/2))
   
   let looseParticles = []
   
