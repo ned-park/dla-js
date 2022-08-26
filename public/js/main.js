@@ -8,7 +8,6 @@ let pixels = Array.from(document.querySelectorAll('.pixel')).filter(pixel => {
 })
 
 const OPEN_TOPOLOGY = sim.getAttribute('data-open-topology') == "true"
-console.log(OPEN_TOPOLOGY)
 // const DEPTH = Number(sim.getAttribute('data-depth')) || 1 // assume 2D once more
 const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 4 // assume 2D, change to *3 -1 if 8/26 directions are desired
 
@@ -128,7 +127,6 @@ function moveParticles(particlesArray) {
   return updatedParticlesArray
 }
 
-
 function runSimulation() {
   createSeed(10,10)
   
@@ -140,12 +138,17 @@ function runSimulation() {
     looseParticles.push(particle)
   }
  
-
-  setInterval(() => {
-    looseParticles = moveParticles(looseParticles)  
-    // console.log(looseParticles.length)
+  const moveInterval = setInterval(() => {
+    looseParticles = moveParticles(looseParticles) 
+    if (looseParticles.length == 0) stopMoving()
   }, intervalFrequency);
+
+  moveInterval
   
+  function stopMoving() {
+    console.log('simulation ended')
+    clearInterval(moveInterval);
+  }
 
 }
 
