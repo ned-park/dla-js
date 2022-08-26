@@ -1,7 +1,12 @@
-let pixels = Array.from(document.querySelectorAll('.pixel'))
 const sim = document.querySelector('#simulator')
 const ROW = Number(sim.getAttribute('data-row'))
 const COL = Number(sim.getAttribute('data-col'))
+
+let pixels = Array.from(document.querySelectorAll('.pixel')).filter(pixel => {
+  let [, x, y] = pixel.getAttribute('id').split('_')
+  return x >= 0 && y >= 0 && x < ROW && y < COL
+})
+
 const OPEN_TOPOLOGY = sim.getAttribute('data-open-topology') == "true"
 console.log(OPEN_TOPOLOGY)
 // const DEPTH = Number(sim.getAttribute('data-depth')) || 1 // assume 2D once more
@@ -9,10 +14,10 @@ const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 
 
 let intervalFrequency = 20 //ms
 
-const PARTICLES = Math.floor(ROW*COL*0.1) // 10% of space is filled with particles
+const PARTICLES = 1000 || Math.floor(ROW*COL*0.1) // 10% of space available space is filled with particles
 
 function createSeed(x=0, y=0) {
-  const seed = document.querySelector(`#pixel-${x}-${y}`)
+  const seed = document.querySelector(`#pixel_${x}_${y}`)
   seed.classList.remove('loose')
   seed.classList.add('occupied')
   seed.style.background = "black"
@@ -46,10 +51,9 @@ function hasNeighbours(x, y) {
     for (let j = -1; j <= 1; j++) {
       let nx = getEquivalenceClassModN(x+i, ROW)
       let ny = getEquivalenceClassModN(y+j, COL)
-      console.log(document.querySelector(`#pixel-${nx}-${ny}`).length)
       if (ny == y && nx == x) {
         continue
-      } else if (document.querySelector(`#pixel-${nx}-${ny}`).classList.contains('occupied')) {
+      } else if (document.querySelector(`#pixel_${nx}_${ny}`).classList.contains('occupied')) {
         return true
       }
     }
@@ -58,7 +62,7 @@ function hasNeighbours(x, y) {
 }
 
 function enterParticle(pixel=getRandomPixel()) {
-  while (pixel.classList.contains('occupied') || pixel.classList.contains('loose')) {
+  while (pixel.classList.contains('occupied') || pixel.classList.contains('loose') || pixel.classList.contains('hidden')) {
     pixel = getRandomPixel()
   }
   return pixel
@@ -68,7 +72,7 @@ function moveParticles(particlesArray) {
   let updatedParticlesArray = []
 
   let positioned = particlesArray.filter(particle => {
-    let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
+    let [, x, y] = particle.getAttribute('id').split('_').map(n => Number(n))
     return hasNeighbours(x, y)
   })
 
@@ -78,12 +82,13 @@ function moveParticles(particlesArray) {
   })
 
   particlesArray = particlesArray.filter(particle => {
-    let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
+    let [, x, y] = particle.getAttribute('id').split('_').map(n => Number(n))
+
     return !hasNeighbours(x, y) && !outOfBounds(x, y)
   })
 
   for (let i = 0; i < particlesArray.length; i++) {
-    let [, x, y] = particlesArray[i].getAttribute('id').split('-').map(n => Number(n))
+    let [, x, y] = particlesArray[i].getAttribute('id').split('_').map(n => Number(n))
     let direction = getRandomInt(NUMBER_OF_DIRECTIONS)
     switch (direction) { // topologically closed simulation
       case 0: // up
@@ -105,14 +110,13 @@ function moveParticles(particlesArray) {
     
     if (OPEN_TOPOLOGY) {
       particlesArray = particlesArray.filter(particle => {
-        console.log(particle.getAttribute('id')).split('-').length
-        // let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n)) // deal with - problem...
-        // return !outOfBounds(x, y)
+        let [, x, y] = particle.getAttribute('id').split('_').map(n => Number(n)) // deal with - problem...
+        return !outOfBounds(x, y)
       })
     }
 
     particlesArray[i].classList.remove('loose')
-    let newSpot = document.querySelector(`#pixel-${x}-${y}`)
+    let newSpot = document.querySelector(`#pixel_${x}_${y}`)
     // if (hasNeighbours(x, y)) {
       // newSpot.classList.add('occupied') 
     // } else {
@@ -139,7 +143,7 @@ function runSimulation() {
 
   setInterval(() => {
     looseParticles = moveParticles(looseParticles)  
-    console.log(looseParticles.length)
+    // console.log(looseParticles.length)
   }, intervalFrequency);
   
 
