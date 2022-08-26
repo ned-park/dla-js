@@ -19,8 +19,8 @@ body {
 .pixel {
   background: #ddd;
   flex: 1 0 1;
-  width: 0.4vw;
-  height: 0.4vw;
+  /* width: 0.4vw;
+  height: 0.4vw; */
   /* float: left; */
 }
 
