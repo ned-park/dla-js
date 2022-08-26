@@ -1,5 +1,5 @@
 module.exports = {
   getIndex: (req,res)=>{
-      res.render('index.ejs', {row: 100, col: 100})
+      res.render('index.ejs', {row: 20, col: 20})
   }
 }

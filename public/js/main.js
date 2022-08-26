@@ -46,6 +46,7 @@ function hasNeighbours(x, y) {
     for (let j = -1; j <= 1; j++) {
       let nx = getEquivalenceClassModN(x+i, ROW)
       let ny = getEquivalenceClassModN(y+j, COL)
+      console.log(document.querySelector(`#pixel-${nx}-${ny}`).length)
       if (ny == y && nx == x) {
         continue
       } else if (document.querySelector(`#pixel-${nx}-${ny}`).classList.contains('occupied')) {
@@ -104,8 +105,9 @@ function moveParticles(particlesArray) {
     
     if (OPEN_TOPOLOGY) {
       particlesArray = particlesArray.filter(particle => {
-        let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n))
-        return !outOfBounds(x, y)
+        console.log(particle.getAttribute('id')).split('-').length
+        // let [, x, y] = particle.getAttribute('id').split('-').map(n => Number(n)) // deal with - problem...
+        // return !outOfBounds(x, y)
       })
     }
 

@@ -21,6 +21,10 @@ body {
   float: left;
 }
 
+.hidden {
+  display: none;
+}
+
 .loose {
   background:#9a6b04;
 }

@@ -8,10 +8,10 @@
   <title>Diffusion Limited Aggregation Simulator</title>
 </head>
 <body>
-  <section id="simulator" data-row="<%=row%>" data-col="<%=col%>" data-open-topology="false">
-  <% for (let i = 0; i < row; i++) { 
-       for (let j = 0; j < col; j++) { %>
-        <div class="pixel" id="<%=`pixel-${i}-${j}`%>"></div>
+  <section id="simulator" data-row="<%=row%>" data-col="<%=col%>" data-open-topology="true">
+  <% for (let i = -1; i <= row; i++) { 
+       for (let j = -1; j <= col; j++) { %>
+        <div class="pixel <%= (i <0 || j < 0 || i == row || j == col)? `hidden` : null%>" id="<%=`pixel-${i}-${j}`%>"></div>
     <% }
      } 
   %>
