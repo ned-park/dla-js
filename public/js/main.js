@@ -1,6 +1,24 @@
 const sim = document.querySelector('#simulator')
 const ROW = Number(sim.getAttribute('data-row'))
 const COL = Number(sim.getAttribute('data-col'))
+let openTopology = sim.getAttribute('data-open-topology') == "true"
+
+const beginBtn = document.querySelector('#begin').addEventListener('click', runSimulation)
+const resetBtn = document.querySelector('#reset').addEventListener('click', resetSimulation)
+const topology = document.querySelector('#topology').addEventListener('click', changeTopology)
+
+function changeTopology() {
+  openTopology = !openTopology
+}
+
+function resetSimulation() {
+  pixels.forEach(pixel => {
+    pixel.classList.remove('loose')
+    pixel.classList.remove('occupied')
+  })
+  runSimulation();
+}
+
 
 let pixels = Array.from(document.querySelectorAll('.pixel')).filter(pixel => {
   let [, x, y] = pixel.getAttribute('id').split('_')
@@ -12,7 +30,7 @@ pixels.forEach(pixel => {
   pixel.style.height = `${40/COL}vw`
 })
 
-const OPEN_TOPOLOGY = sim.getAttribute('data-open-topology') == "true"
+
 // const DEPTH = Number(sim.getAttribute('data-depth')) || 1 // assume 2D once more
 const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 8 // assume 2D, change to *3 -1 if 8/26 directions are desired
 
@@ -37,7 +55,7 @@ function getRandomPixel() {
 }
 
 function getEquivalenceClassModN(m, n) {
-  return OPEN_TOPOLOGY
+  return openTopology
     ? m
     : (m + n) % n
 }
@@ -47,7 +65,7 @@ function outOfBounds(x, y) {
 }
 
 function hasNeighbours(x, y) {
-  if (OPEN_TOPOLOGY && outOfBounds(x, y)) {
+  if (openTopology && outOfBounds(x, y)) {
     return false
   }
 
@@ -128,7 +146,7 @@ function moveParticles(particlesArray) {
         break;
     }
     
-    if (OPEN_TOPOLOGY) {
+    if (openTopology) {
       particlesArray = particlesArray.filter(particle => {
         let [, x, y] = particle.getAttribute('id').split('_').map(n => Number(n)) // deal with - problem...
         return !outOfBounds(x, y)
@@ -149,7 +167,9 @@ function moveParticles(particlesArray) {
 }
 
 function runSimulation() {
-  createSeed(Math.floor(ROW/2), Math.floor(COL/2))
+  for (let i = 0; i < ROW; i++) {
+    createSeed(0, i)
+  }
   
   let looseParticles = []
   
@@ -170,7 +190,6 @@ function runSimulation() {
     console.log('simulation ended')
     clearInterval(moveInterval);
   }
-
 }
 
 runSimulation()
