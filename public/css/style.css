@@ -11,6 +11,7 @@ body {
   border-radius: 5px;
   box-shadow: 0px 0px 20px 3px black;
   display: flex;
+  justify-content: stretch;
   align-items: stretch;
   flex-flow: row wrap;
 }
@@ -18,10 +19,6 @@ body {
 .pixel {
   background: #ddd;
   flex: 1 0 none;
-  min-width: 0.1vw;
-  min-height: 0.1vw;
-  max-width: 1vw;
-  max-height: 1vw;
 }
 
 .hidden {
