@@ -24,5 +24,7 @@ Navigate to [http://localhost:3000](http://localhost:3000) replace the port with
 
 ## Improvements
 Improved efficiency to reduce rendering load, allowing for larger simulations with more particles.
+
 Generalized functions to enable users to setup and interact with simulations.  
-Improved width and height setting to allow 
+
+Improved width and height setting to allow dynamic resizing of pixels based on simulator size.
