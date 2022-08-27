@@ -25,20 +25,14 @@ let pixels = Array.from(document.querySelectorAll('.pixel')).filter(pixel => {
   return x >= 0 && y >= 0 && x < ROW && y < COL
 })
 
-// pixels.forEach(pixel => {
-//   pixel.style.width = `${40/ROW}vw`
-//   pixel.style.height = `${40/COL}vw`
-// })
-
-document.styleSheets[0].insertRule(`.pixel { width:${40/ROW}vw; }`, 0)
-document.styleSheets[0].insertRule(`.pixel { height:${40/COL}vw; }`, 0)
+document.styleSheets[0].insertRule(`.pixel { width:${40/ROW}vw; height:${40/COL}vw;  }`, 0)
 
 // const DEPTH = Number(sim.getAttribute('data-depth')) || 1 // assume 2D once more
 const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 8 // assume 2D, change to *3 -1 if 8/26 directions are desired
 
 let intervalFrequency = 20 //ms
 
-const PARTICLES = 30// Math.floor(ROW*COL*0.05) // 5% of space available space is filled with particles
+const PARTICLES = Math.floor(ROW*COL*0.05) // 5% of space available space is filled with particles
 
 function createSeed(x=0, y=0) {
   const seed = document.querySelector(`#pixel_${x}_${y}`)
