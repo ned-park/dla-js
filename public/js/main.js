@@ -7,7 +7,7 @@ document.querySelector('#begin').addEventListener('click', runSimulation)
 document.querySelector('#reset').addEventListener('click', resetSimulation)
 document.querySelector('#topology').addEventListener('click', changeTopology)
 document.querySelector('#degreesFreedom').addEventListener('change', setDegreesOfFreedom)
-let degreesOfFreedom = Number(sim.getAttribute('data-dimensions')) * 2 || 4 
+let degreesOfFreedom = Number(sim.getAttribute('data-dimensions')) * 2 || document.querySelector('#degreesFreedom').value || 4 
 
 
 function changeTopology() {
