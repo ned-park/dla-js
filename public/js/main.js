@@ -8,7 +8,7 @@ document.querySelector('#reset').addEventListener('click', resetSimulation)
 document.querySelector('#topology').addEventListener('click', changeTopology)
 document.querySelector('#degreesFreedom').addEventListener('change', setDegreesOfFreedom)
 let degreesOfFreedom = Number(sim.getAttribute('data-dimensions')) * 2 || document.querySelector('#degreesFreedom').value || 4 
-
+let counter = 0
 
 function changeTopology() {
   openTopology = !openTopology
@@ -100,6 +100,7 @@ function enterParticle(pixel=getRandomPixel()) {
 }
 
 function moveParticles(particlesArray) {
+  ++counter
   let updatedParticlesArray = []
 
   let positioned = particlesArray.filter(particle => {
@@ -110,6 +111,8 @@ function moveParticles(particlesArray) {
   positioned.forEach( particle => {
     particle.classList.remove('loose')
     particle.classList.add('occupied')
+    // particle.style.background = `rgb(${(counter)%256}, ${(counter/256)|0}, ${counter % 256})`
+
   })
 
   particlesArray = particlesArray.filter(particle => {
@@ -121,7 +124,7 @@ function moveParticles(particlesArray) {
   for (let i = 0; i < particlesArray.length; i++) {
     let [, x, y] = particlesArray[i].getAttribute('id').split('_').map(n => Number(n))
     let direction = getRandomInt(degreesOfFreedom)
-    switch (direction) { // topologically closed simulation
+    switch (direction) { 
       case 0: // up
         y = getEquivalenceClassModN(y-1, COL)
         break;
