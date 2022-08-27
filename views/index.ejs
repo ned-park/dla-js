@@ -8,6 +8,28 @@
   <title>Diffusion Limited Aggregation Simulator</title>
 </head>
 <body>
+  <section id="options">
+    <h2>Options</h2>
+    <p>These options enable customization of the simulation parameters.  You'll notice that
+      the original seeds in the simulation are black.  Those which have aggregated are mostly
+      red, except for the odd one which is brown.  Those brown coloured pixels occur where more 
+      than one particle has joined the aggregate.
+    </p>
+    
+    <p>By default the simulation takes place on a closed topology, which means all of the sides 
+      are connection to each other--as if the square was really a sphere.  Opening the topology 
+      means that the particles are free to leave the system making the diffusion much more 
+      sparse.  
+    </p>
+    <p>Add more particles adds another batch of particles to the simulation.  This will often 
+      seed up the convergence, but can change the shape of the aggregate.  
+    </p>
+    <label for="topology">Open topology: </label>
+    <input type="checkbox" name="topology" id="topology">
+    <button id="begin">Add more particles</button>
+    <button id="reset">Reset</button>
+  </section>
+
   <section id="simulator" data-row="<%=row%>" data-col="<%=col%>" data-open-topology="false">
   <% for (let i = -1; i <= row; i++) { 
        for (let j = -1; j <= col; j++) { %>
@@ -16,12 +38,7 @@
      } 
   %>
   </section>
-  <section id="setup">
-    <label for="topology">Open topology: </label>
-    <input type="checkbox" name="topology" id="topology">
-    <button id="begin">Add more particles</button>
-    <button id="reset">Reset</button>
-  </section>
+
 
 
   
