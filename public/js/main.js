@@ -3,12 +3,20 @@ const ROW = Number(sim.getAttribute('data-row'))
 const COL = Number(sim.getAttribute('data-col'))
 let openTopology = sim.getAttribute('data-open-topology') == "true"
 
-const beginBtn = document.querySelector('#begin').addEventListener('click', runSimulation)
-const resetBtn = document.querySelector('#reset').addEventListener('click', resetSimulation)
-const topology = document.querySelector('#topology').addEventListener('click', changeTopology)
+document.querySelector('#begin').addEventListener('click', runSimulation)
+document.querySelector('#reset').addEventListener('click', resetSimulation)
+document.querySelector('#topology').addEventListener('click', changeTopology)
+document.querySelector('#degreesFreedom').addEventListener('change', setDegreesOfFreedom)
+let degreesOfFreedom = Number(sim.getAttribute('data-dimensions')) * 2 || 4 // assume 2D, change to *3 -1 if 8/26 directions are desired
+
 
 function changeTopology() {
   openTopology = !openTopology
+}
+
+function setDegreesOfFreedom() {
+  degreesOfFreedom = Number(document.querySelector('#degreesFreedom').value)
+  console.log(degreesOfFreedom)
 }
 
 function resetSimulation() {
@@ -27,8 +35,6 @@ let pixels = Array.from(document.querySelectorAll('.pixel')).filter(pixel => {
 
 document.styleSheets[0].insertRule(`.pixel { width:${40/ROW}vw; height:${40/COL}vw;  }`, 0)
 
-// const DEPTH = Number(sim.getAttribute('data-depth')) || 1 // assume 2D once more
-const NUMBER_OF_DIRECTIONS = Number(sim.getAttribute('data-dimensions')) * 2 || 8 // assume 2D, change to *3 -1 if 8/26 directions are desired
 
 let intervalFrequency = 20 //ms
 
@@ -63,6 +69,13 @@ function outOfBounds(x, y) {
 function hasNeighbours(x, y) {
   if (openTopology && outOfBounds(x, y)) {
     return false
+  }
+
+  if (degreesOfFreedom == 4) {
+    return document.querySelector(`#pixel_${getEquivalenceClassModN(x+1, ROW)}_${getEquivalenceClassModN(y, COL)}`).classList.contains('occupied')
+      || document.querySelector(`#pixel_${getEquivalenceClassModN(x-1, ROW)}_${getEquivalenceClassModN(y, COL)}`).classList.contains('occupied')
+      || document.querySelector(`#pixel_${getEquivalenceClassModN(x, ROW)}_${getEquivalenceClassModN(y+1, COL)}`).classList.contains('occupied')
+      || document.querySelector(`#pixel_${getEquivalenceClassModN(x, ROW)}_${getEquivalenceClassModN(y-1, COL)}`).classList.contains('occupied')
   }
 
   for (let i = -1; i <= 1; i++) {
@@ -107,7 +120,7 @@ function moveParticles(particlesArray) {
 
   for (let i = 0; i < particlesArray.length; i++) {
     let [, x, y] = particlesArray[i].getAttribute('id').split('_').map(n => Number(n))
-    let direction = getRandomInt(NUMBER_OF_DIRECTIONS)
+    let direction = getRandomInt(degreesOfFreedom)
     switch (direction) { // topologically closed simulation
       case 0: // up
         y = getEquivalenceClassModN(y-1, COL)

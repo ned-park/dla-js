@@ -13,7 +13,8 @@
     <p>These options enable customization of the simulation parameters.  You'll notice that
       the original seeds in the simulation are black.  Those which have aggregated are mostly
       red, except for the odd one which is brown.  Those brown coloured pixels occur where more 
-      than one particle has joined the aggregate.
+      than one particle has joined the aggregate. Changing this parameters during the simulation 
+      can be interesting, however it will also change the appearance of the aggregate.  
     </p>
     
     <p>By default the simulation takes place on a closed topology, which means all of the sides 
@@ -22,12 +23,28 @@
       sparse.  
     </p>
     <p>Add more particles adds another batch of particles to the simulation.  This will often 
-      seed up the convergence, but can change the shape of the aggregate.  
+      seed up the convergence, but can change the shape of the aggregate--especially if added 
+      later in the simulation.
     </p>
-    <label for="topology">Open topology: </label>
-    <input type="checkbox" name="topology" id="topology">
-    <button id="begin">Add more particles</button>
-    <button id="reset">Reset</button>
+    <p>The degrees of freedom specifies how many directions the particles can move in, and whether 
+      they converge only perpendicularly, or in increments of &pi;/4 radians.
+
+    </p>
+    <section id="controls">
+      <div>
+        <label for="topology">Open topology: </label>
+        <input type="checkbox" name="topology" id="topology">
+      </div>
+      <div>
+        <label for="degreesFreedom">Degrees of freedom: </label>
+        <select name="degreesFreedom" id="degreesFreedom">
+          <option value="4">4</option>
+          <option value="8">8</option>
+        </select>
+      </div>
+      <button id="begin">Add more particles</button>
+      <button id="reset">Reset</button>
+    </section>
   </section>
 
   <section id="simulator" data-row="<%=row%>" data-col="<%=col%>" data-open-topology="false">
