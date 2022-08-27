@@ -43,6 +43,7 @@ body {
 .pixel {
   background: #ddd;
   flex: 1 0 none;
+  /* width and height set in main.js to ensure each .pixel will be square */
 }
 
 .hidden {
