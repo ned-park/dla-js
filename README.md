@@ -7,12 +7,13 @@ into aggregates forming (in simulations) 2D fractals.
 
 ![DLA Simulator after running](./dlaSim.png "DLA Simulation")
 
+See it live [https://dla-simulator.herokuapp.com/](https://dla-simulator.herokuapp.com/)
+
 ## Technologies used
 Node, Express, JavaScript, EJS/HTML, and CSS.  
 
 ## To run
-clone the repository and navigate to it.  Edit config/.port if you're inclined to change the port
-`PORT=3000` or any other port you wish to use.  If desired, you can also edit the row and col
+clone the repository and navigate to it.  Edit .env if you're inclined to change the port from 3000, e.g. `PORT=5000` or any other port you wish to use.  If desired, you can also edit the row and col
 in controllers/home.js to change the simulation granularity, save any changes and run:
 
 ```bash
