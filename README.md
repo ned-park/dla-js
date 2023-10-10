@@ -7,8 +7,6 @@ into aggregates forming (in simulations) 2D fractals.
 
 ![DLA Simulator after running](./dlaSim.png "DLA Simulation")
 
-See it live [https://dla-simulator.herokuapp.com/](https://dla-simulator.herokuapp.com/)
-
 ## Technologies used
 Node, Express, JavaScript, EJS/HTML, and CSS.  
 
